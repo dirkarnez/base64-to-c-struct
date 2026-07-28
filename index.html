@@ -24,8 +24,7 @@
       const isLittleEndian = true;
       const dataView = new DataView(Uint8Array.fromBase64(prompt("Base64 value")).buffer);
       // dataView.getUint16(0, isLittleEndian);
-
-
+      
       const arr = [
         {type: "uint8_t", field: "dlog_token"},
         {type: "int8_t", field: "rssi"},
@@ -36,9 +35,11 @@
         {type: "uint64_t", field: "t4"}
       ];
       
-      arr.reduce((p, c, i) => {
+      const b = arr.reduce((p, c, i) => {
         if (c.type == "uint8_t") {
           return ({ newArray: [...p.newArray, { ...arr[i], value: dataView.getUint8(p.offset, true) }], offset: 1});
+        } else {
+            return p;
         }
       }, { newArray: [], offset: 0 });
       
