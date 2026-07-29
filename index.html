@@ -36,7 +36,7 @@
       ];
       
       let offset = 0;
-      arr.map(a => {
+      const output = arr.map(a => {
           if (a.type == "uint8_t") {
               const element = {...a, value: dataView.getUint8(offset, true) };
               offset += 1;
@@ -59,6 +59,8 @@
               return a;
           }
       });
+
+      debugger;
     })();
     
   </script>
