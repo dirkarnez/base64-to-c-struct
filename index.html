@@ -55,6 +55,8 @@
       console.log(dataView.getInt8(1, true));
       console.log(dataView.getUint32(2, true));
       console.log(dataView.getUint16(32 /* 32 * uint8_t */, true));
+      .getUint8(0xc + 1, true)
+      (2 << 8) + 0xf6
       // Expected output: 65535
 
     })()
