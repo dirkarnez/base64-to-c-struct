@@ -26,40 +26,40 @@
       // dataView.getUint16(0, isLittleEndian);
       
       const arr = [
-        {type: "uint8_t", field: "dlog_token"},
-        {type: "int8_t", field: "rssi"},
-        {type: "uint32_t", field: "rtt"},
-        {type: "uint64_t", field: "t1"},
-        {type: "uint64_t", field: "t2"},
-        {type: "uint64_t", field: "t3"},
-        {type: "uint64_t", field: "t4"}
+          {type: "uint8_t", field: "dlog_token"},
+          {type: "int8_t", field: "rssi"},
+          {type: "uint32_t", field: "rtt"},
+          {type: "uint64_t", field: "t1"},
+          {type: "uint64_t", field: "t2"},
+          {type: "uint64_t", field: "t3"},
+          {type: "uint64_t", field: "t4"}
       ];
       
-      const b = arr.reduce((p, c, i) => {
-        if (c.type == "uint8_t") {
-          return ({ newArray: [...p.newArray, { ...arr[i], value: dataView.getUint8(p.offset, true) }], offset: 1});
-        } else {
-            return p;
-        }
-      }, { newArray: [], offset: 0 });
-      
-      // uint8_t	dlog_token
-      // int8_t	rssi
-      // uint32_t	rtt
-      // uint64_t	t1
-      // uint64_t	t2
-      // uint64_t	t3
-      // uint64_t	t4
-      
-      console.log(dataView.getUint8(0, true));
-      console.log(dataView.getInt8(1, true));
-      console.log(dataView.getUint32(2, true));
-      console.log(dataView.getUint16(32 /* 32 * uint8_t */, true));
-      .getUint8(0xc + 1, true)
-      (2 << 8) + 0xf6
-      // Expected output: 65535
-
-    })()
+      let offset = 0;
+      arr.map(a => {
+          if (a.type == "uint8_t") {
+              const element = {...a, value: dataView.getUint8(offset, true) };
+              offset += 1;
+              return element;
+          } if (a.type == "int8_t") {
+              const element = {...a, value: dataView.getInt8(offset, true) };
+              offset += 1;
+              return element;
+          } if (a.type == "uint32_t") {
+              const element = {...a, value: dataView.getUint32(offset, true) };
+              offset += 4;
+              return element;
+          } if (a.type == "uint64_t") {
+              const left = dataView.getUint32(offset, true);
+              const right = dataView.getUint32(offset + 4, true);
+              const element = {...a, value: (right << 64) + left };
+              offset += 8;
+              return element;
+          } else {
+              return a;
+          }
+      });
+    })();
     
   </script>
 </body>
