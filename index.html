@@ -51,9 +51,7 @@
               offset += 4;
               return element;
           } if (a.type == "uint64_t") {
-              const left = dataView.getUint32(offset, true);
-              const right = dataView.getUint32(offset + 4, true);
-              const element = {...a, value: (right << 64) + left };
+              const left = dataView.getBigUint64(offset, true);
               offset += 8;
               return element;
           } else {
