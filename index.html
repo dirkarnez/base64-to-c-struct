@@ -35,17 +35,7 @@
           {type: "uint64_t", field: "t3"},
           {type: "uint64_t", field: "t4"}
       ];
-
-      const arr = [
-          {type: "uint8_t", field: "dlog_token"},
-          {type: "int8_t", field: "rssi"},
-          {type: "uint32_t", field: "rtt"},
-          {type: "uint64_t", field: "t1"},
-          {type: "uint64_t", field: "t2"},
-          {type: "uint64_t", field: "t3"},
-          {type: "uint64_t", field: "t4"}
-      ];
-
+      
       let alignmentSize = 4; // bytes
       let offset = 0;
       let bytesLeftForAlignment = alignmentSize;
@@ -62,6 +52,7 @@
               else {
                 bytesLeftForAlignment = alignmentSize;
               }
+              offset += size;
               return element;
           } if (a.type == "int8_t") {
               const size = 1;
@@ -89,7 +80,7 @@
               return element;
           } if (a.type == "uint64_t") {
               const size = 8;
-              const sameLine = bytesLeftForAlignment >= size;
+              const sameLine = bytesLeftForAlignment >= size || (bytesLeftForAlignment % size == 0);
               offset = sameLine ? offset : offset + bytesLeftForAlignment;
               const element = {...a, value: dataView.getBigUint64(offset, true) };
               if (sameLine) {
