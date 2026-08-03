@@ -35,24 +35,40 @@
           {type: "uint64_t", field: "t3"},
           {type: "uint64_t", field: "t4"}
       ];
-      
+
+      let alignmentSize = 4; // bytes
       let offset = 0;
+      let bytesLeftForAlignment = alignmentSize;
+      
+      const setOffset = (size) => {
+          if (bytesLeftForAlignment < size) {
+            offset += size;
+            bytesLeftForAlignment -= size;
+          } else {
+            offset += alignmentSize + size;
+            bytesLeftForAlignment = alignmentSize - size;
+          }
+      }
       const output = arr.map(a => {
           if (a.type == "uint8_t") {
+              const size = 1;
+              setOffset(size);
               const element = {...a, value: dataView.getUint8(offset, true) };
-              offset += 1;
               return element;
           } if (a.type == "int8_t") {
+              const size = 1;
+              setOffset(size);
               const element = {...a, value: dataView.getInt8(offset, true) };
-              offset += 1;
               return element;
           } if (a.type == "uint32_t") {
+              const size = 4;
+              setOffset(size);
               const element = {...a, value: dataView.getUint32(offset, true) };
-              offset += 4;
               return element;
           } if (a.type == "uint64_t") {
+              const size = 8;
+              setOffset(size);
               const element = {...a, value: dataView.getBigUint64(offset, true) };
-              offset += 8;
               return element;
           } else {
               return a;
