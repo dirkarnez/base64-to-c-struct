@@ -41,7 +41,7 @@
       let bytesLeftForAlignment = alignmentSize;
       
       const setOffset = (size) => {
-          if (bytesLeftForAlignment < size) {
+          if (bytesLeftForAlignment > size) {
             offset += size;
             bytesLeftForAlignment -= size;
           } else {
